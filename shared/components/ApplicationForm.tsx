@@ -1,6 +1,9 @@
 'use client';
 
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { User } from '@/shared/types/User';
 
 type ApplicationFormProps = {
   studyId: string;
@@ -16,6 +19,8 @@ export default function ApplicationForm({ studyId }: ApplicationFormProps) {
   const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+  const router = useRouter();
 
   const errors = {
     firstName: !firstName ? 'First name is required' : undefined,
@@ -35,9 +40,25 @@ export default function ApplicationForm({ studyId }: ApplicationFormProps) {
 
   const isValid = Object.values(errors).every((e) => !e);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Blank submit function
+
+    const response = await axios.post<User>('/api/db', {
+      firstname: firstName,
+      lastname: lastName,
+      phone,
+      email,
+      nctId: studyId,
+      letter,
+    });
+
+    if (response.status === 201) {
+      alert('Application submitted successfully!');
+    } else {
+      alert('Failed to submit application. Please try again later.');
+    }
+
+    router.push('/search');
   };
 
   const letter = `I hope this message finds you well. My name is ${firstName || '[First Name]'} ${lastName || '[Last Name]'}, and I am writing to express my strong interest in participating in your upcoming clinical trial ${studyId ? `[${studyId}]` : '[NCT code]'}. 
@@ -58,7 +79,7 @@ Thank you for considering my interest!`;
             onChange={(e) => setFirstName(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, firstName: true }))}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border-gray-300 p-2 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </label>
         {touched.firstName && errors.firstName && (
@@ -74,7 +95,7 @@ Thank you for considering my interest!`;
             onChange={(e) => setLastName(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, lastName: true }))}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border-gray-300 p-2 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </label>
         {touched.lastName && errors.lastName && (
@@ -90,7 +111,7 @@ Thank you for considering my interest!`;
             onChange={(e) => setPhone(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border-gray-300 p-2 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </label>
         {touched.phone && errors.phone && (
@@ -106,7 +127,7 @@ Thank you for considering my interest!`;
             onChange={(e) => setEmail(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, email: true }))}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border-gray-300 p-2 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </label>
         {touched.email && errors.email && (
@@ -119,7 +140,7 @@ Thank you for considering my interest!`;
           <textarea
             value={letter}
             readOnly
-            className="mt-1 block w-full resize-none rounded-md border-gray-300 bg-gray-100 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="mt-1 block w-full resize-none rounded-md border-gray-300 bg-gray-100 p-1 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             rows={5}
           />
         </label>

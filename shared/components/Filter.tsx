@@ -3,29 +3,30 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Study } from '@/shared/types/Study';
+import { LiteStudiesResponse } from '../types/StudiesResponse';
 
 type FilterProps = {
   setStudies: (studies: Study[]) => void;
+  setTotalCount: (count: number) => void;
 };
 
-export default function Filter({ setStudies }: FilterProps) {
+export default function Filter({ setStudies, setTotalCount }: FilterProps) {
   const [cond, setCond] = useState('');
-  const [countTotal, setCountTotal] = useState(true);
   const [pageSize, setPageSize] = useState(5);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     axios
-      .get('api/studies/', {
+      .get<LiteStudiesResponse>('api/studies/', {
         params: {
-          // cond,
-          // countTotal,
+          'query.cond': cond,
           pageSize,
         },
       })
       .then((response) => {
-        setStudies(response.data);
+        setStudies(response.data.studies);
+        setTotalCount(response.data.totalCount);
       })
       .catch((error) => {
         console.error(error);
@@ -42,15 +43,6 @@ export default function Filter({ setStudies }: FilterProps) {
           onChange={(e) => setCond(e.target.value)}
           placeholder="Enter condition"
           className="ml-2 rounded border px-2 py-1"
-        />
-      </label>
-      <label>
-        Count Total:
-        <input
-          type="checkbox"
-          checked={countTotal}
-          onChange={(e) => setCountTotal(e.target.checked)}
-          className="ml-2"
         />
       </label>
       <label>

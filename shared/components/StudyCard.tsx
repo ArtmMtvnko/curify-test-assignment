@@ -20,7 +20,7 @@ export default function StudyCard({ study: { title, conditions, nctId } }: Study
       </div>
       <Link
         href={`/search/${nctId}`}
-        className="mt-2 inline-block rounded bg-pink-200 px-4 py-2 text-white transition hover:bg-pink-500"
+        className="mt-2 inline-block rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-700"
       >
         Apply To Trial
       </Link>

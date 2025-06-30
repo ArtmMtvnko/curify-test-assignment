@@ -1,5 +1,5 @@
 import { Study } from '@/shared/types/Study';
-import { StudiesResponse } from '@/shared/types/StudyResponsePart';
+import { LiteStudiesResponse, StudiesResponse } from '@/shared/types/StudiesResponse';
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
@@ -21,15 +21,17 @@ export async function GET(request: Request) {
 
   params.fields =
     'protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.conditionsModule.conditions';
+  params.countTotal = 'true';
 
   // Add default pageSize if not provided
   if (!params.pageSize) {
     params.pageSize = '5';
   }
 
-  const response = await axios.get<StudiesResponse>(studiesApiUrl, { params });
+  console.log('Request params:', params);
+  console.log('Request URL:', studiesApiUrl);
 
-  console.log(response.data);
+  const response = await axios.get<StudiesResponse>(studiesApiUrl, { params });
 
   const studies = response.data.studies.map<Study>((study) => {
     return {
@@ -39,5 +41,9 @@ export async function GET(request: Request) {
     };
   });
 
-  return NextResponse.json(studies);
+  return NextResponse.json<LiteStudiesResponse>({
+    studies,
+    nextPageToken: response.data.nextPageToken,
+    totalCount: response.data.totalCount,
+  });
 }
