@@ -5,6 +5,7 @@ import Filter from '@/shared/components/Filter';
 import Studies from './(studies)/page';
 import { useStudies } from '@/shared/hooks/useStudies';
 import GoUpButton from '@/shared/components/GoUpButton';
+import Link from 'next/link';
 
 export default function SearchPage() {
   const [cond, setCond] = useState('');
@@ -19,6 +20,11 @@ export default function SearchPage() {
       <GoUpButton />
 
       <Filter onCondChange={setCond} />
+
+      <Link href="/applicants" className="mb-1 hover:underline">
+        click here to see all applicants
+      </Link>
+
       <p>
         Studies found: <b>{totalCount}</b>
       </p>

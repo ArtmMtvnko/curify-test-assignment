@@ -25,7 +25,7 @@ export default function Filter({ onCondChange }: FilterProps) {
           type="text"
           value={cond}
           onChange={(e) => setCond(e.target.value)}
-          placeholder="Enter condition"
+          placeholder="e.g. diabetes"
           className="rounded border px-2 py-1 sm:ml-2"
         />
       </label>

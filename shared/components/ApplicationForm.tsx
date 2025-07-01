@@ -3,7 +3,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User } from '@/shared/types/User';
+import { Applicant } from '@/shared/types/User';
 
 type ApplicationFormProps = {
   studyId: string;
@@ -47,7 +47,7 @@ export default function ApplicationForm({ studyId }: ApplicationFormProps) {
     setLoading(true);
 
     try {
-      const response = await axios.post<User>('/api/db', {
+      const response = await axios.post<Applicant>('/api/db', {
         firstname: firstName,
         lastname: lastName,
         phone,
