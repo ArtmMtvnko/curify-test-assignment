@@ -34,7 +34,7 @@ export default function Filter({ setStudies, setTotalCount }: FilterProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="mb-4 flex flex-col gap-2">
       <label>
         Condition:
         <input
