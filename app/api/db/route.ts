@@ -4,6 +4,8 @@ import { Applicant } from '@/shared/types/User';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  await connectToDatabase();
+
   return NextResponse.json(await User.find({}), { status: 200 });
 }
 
