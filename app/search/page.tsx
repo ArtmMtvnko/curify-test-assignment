@@ -32,7 +32,7 @@ export default function SearchPage() {
         <button
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
-          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+          className="mt-4 cursor-pointer rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-700"
         >
           {isFetchingNextPage ? 'Loading more...' : 'Load More'}
         </button>

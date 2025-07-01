@@ -19,17 +19,20 @@ export default function Filter({ onCondChange }: FilterProps) {
       onSubmit={handleSubmit}
       className="mb-4 flex flex-col gap-2 rounded-lg bg-white p-4 shadow"
     >
-      <label>
-        Condition:
+      <label className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <span>Condition:</span>
         <input
           type="text"
           value={cond}
           onChange={(e) => setCond(e.target.value)}
           placeholder="Enter condition"
-          className="ml-2 rounded border px-2 py-1"
+          className="rounded border px-2 py-1 sm:ml-2"
         />
       </label>
-      <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white">
+      <button
+        type="submit"
+        className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-700"
+      >
         Apply Filter
       </button>
     </form>

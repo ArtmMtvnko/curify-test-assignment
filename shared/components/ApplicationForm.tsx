@@ -40,25 +40,33 @@ export default function ApplicationForm({ studyId }: ApplicationFormProps) {
 
   const isValid = Object.values(errors).every((e) => !e);
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
-    const response = await axios.post<User>('/api/db', {
-      firstname: firstName,
-      lastname: lastName,
-      phone,
-      email,
-      nctId: studyId,
-      letter,
-    });
+    try {
+      const response = await axios.post<User>('/api/db', {
+        firstname: firstName,
+        lastname: lastName,
+        phone,
+        email,
+        nctId: studyId,
+        letter,
+      });
 
-    if (response.status === 201) {
-      alert('Application submitted successfully!');
-    } else {
+      if (response.status === 201) {
+        alert('Application submitted successfully!');
+      } else {
+        alert('Failed to submit application. Please try again later.');
+      }
+    } catch {
       alert('Failed to submit application. Please try again later.');
+    } finally {
+      setLoading(false);
+      router.back();
     }
-
-    router.push('/search');
   };
 
   const letter = `I hope this message finds you well. My name is ${firstName || '[First Name]'} ${lastName || '[Last Name]'}, and I am writing to express my strong interest in participating in your upcoming clinical trial ${studyId ? `[${studyId}]` : '[NCT code]'}. 
@@ -141,7 +149,7 @@ Thank you for considering my interest!`;
             value={letter}
             readOnly
             className="mt-1 block w-full resize-none rounded-md border-gray-300 bg-gray-100 p-1 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            rows={5}
+            rows={9}
           />
         </label>
       </div>
@@ -164,11 +172,15 @@ Thank you for considering my interest!`;
       <button
         type="submit"
         disabled={!isValid}
-        className={`w-full rounded-md px-4 py-2 font-semibold text-white transition-colors ${
-          isValid ? 'bg-blue-600 hover:bg-blue-700' : 'cursor-not-allowed bg-gray-400'
+        className={`w-full cursor-pointer rounded-md px-4 py-2 font-semibold text-white transition-colors ${
+          isValid
+            ? loading
+              ? 'bg-blue-300'
+              : 'bg-blue-500 hover:bg-blue-700'
+            : 'cursor-not-allowed bg-gray-400'
         }`}
       >
-        Submit
+        {loading ? 'Submiting...' : 'Submit'}
       </button>
     </form>
   );
