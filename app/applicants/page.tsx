@@ -1,13 +1,17 @@
 import { Applicant } from '@/shared/types/User';
 import Link from 'next/link';
+import axios from 'axios';
 
-const domain = process.env.DOMAIN || 'http://localhost:3000';
+const domain = process.env.DOMAIN;
+
+if (!domain) {
+  throw new Error('DOMAIN environment variable is not defined');
+}
 
 async function getApplicants(): Promise<Applicant[]> {
   try {
-    const res = await fetch(`${domain}/api/db`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    return res.json();
+    const res = await axios.get<Applicant[]>(`${domain}/api/db`);
+    return res.data;
   } catch {
     return [];
   }
