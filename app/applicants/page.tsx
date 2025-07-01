@@ -1,6 +1,5 @@
 import { Applicant } from '@/shared/types/User';
 import Link from 'next/link';
-import axios from 'axios';
 
 const domain = process.env.DOMAIN;
 
@@ -10,8 +9,9 @@ if (!domain) {
 
 async function getApplicants(): Promise<Applicant[]> {
   try {
-    const res = await axios.get<Applicant[]>(`${domain}/api/db`);
-    return res.data;
+    const res = await fetch(`${domain}/api/db`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    return await res.json();
   } catch {
     return [];
   }
