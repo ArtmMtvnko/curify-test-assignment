@@ -1,38 +1,24 @@
 'use client';
 
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Study } from '@/shared/types/Study';
-import { LiteStudiesResponse } from '../types/StudiesResponse';
 
 type FilterProps = {
-  setStudies: (studies: Study[]) => void;
-  setTotalCount: (count: number) => void;
+  onCondChange: (cond: string) => void;
 };
 
-export default function Filter({ setStudies, setTotalCount }: FilterProps) {
+export default function Filter({ onCondChange }: FilterProps) {
   const [cond, setCond] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    axios
-      .get<LiteStudiesResponse>('api/studies/', {
-        params: {
-          'query.cond': cond,
-        },
-      })
-      .then((response) => {
-        setStudies(response.data.studies);
-        setTotalCount(response.data.totalCount);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    onCondChange(cond);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 flex flex-col gap-2">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-4 flex flex-col gap-2 rounded-lg bg-white p-4 shadow"
+    >
       <label>
         Condition:
         <input

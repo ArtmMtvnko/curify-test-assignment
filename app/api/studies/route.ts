@@ -15,10 +15,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const queryCond = searchParams.get('query.cond');
+  if (queryCond) params['query.cond'] = queryCond;
 
-  if (queryCond) {
-    params['query.cond'] = queryCond;
-  }
+  const nextPageToken = searchParams.get('pageToken');
+  if (nextPageToken) params['pageToken'] = nextPageToken;
 
   params.fields =
     'protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.conditionsModule.conditions';

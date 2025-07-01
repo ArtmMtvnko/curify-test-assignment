@@ -1,31 +1,42 @@
 'use client';
 
+import { useState } from 'react';
 import Filter from '@/shared/components/Filter';
 import Studies from './(studies)/page';
-import { LiteStudiesResponse } from '@/shared/types/StudiesResponse';
-import { Study } from '@/shared/types/Study';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useStudies } from '@/shared/hooks/useStudies';
+import GoUpButton from '@/shared/components/GoUpButton';
 
 export default function SearchPage() {
-  const [studies, setStudies] = useState<Study[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const [cond, setCond] = useState('');
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
+    useStudies(cond);
 
-  useEffect(() => {
-    const response = axios.get<LiteStudiesResponse>('/api/studies');
-    response
-      .then((res) => res.data)
-      .then((data) => {
-        setStudies(data.studies);
-        setTotalCount(data.totalCount);
-      });
-  }, []);
+  const studies = data?.pages.flatMap((page) => page.studies) ?? [];
+  const totalCount = data?.pages[0]?.totalCount ?? 0;
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
-      <Filter setStudies={setStudies} setTotalCount={setTotalCount} />
-      <p>{`Studies found: ${totalCount}`}</p>
+      <GoUpButton />
+
+      <Filter onCondChange={setCond} />
+      <p>
+        Studies found: <b>{totalCount}</b>
+      </p>
+
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error loading studies</p>}
+
       <Studies studies={studies} />
+
+      {hasNextPage && (
+        <button
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+        >
+          {isFetchingNextPage ? 'Loading more...' : 'Load More'}
+        </button>
+      )}
     </div>
   );
 }
