@@ -1,11 +1,11 @@
 import { Applicant } from '@/shared/types/User';
 import Link from 'next/link';
 
-const port = process.env.PORT || 3000;
+const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 async function getApplicants(): Promise<Applicant[]> {
   try {
-    const res = await fetch(`http://localhost:${port}/api/db`, { cache: 'no-store' });
+    const res = await fetch(`${domain}/api/db`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {
