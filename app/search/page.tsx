@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Filter from '@/shared/components/Filter';
-import Studies from './(studies)/page';
+import StudiesList from '@/shared/components/StudiesList';
 import { useStudies } from '@/shared/hooks/useStudies';
 import GoUpButton from '@/shared/components/GoUpButton';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ export default function SearchPage() {
       {isLoading && <p>Loading...</p>}
       {error && <p>Error loading studies</p>}
 
-      <Studies studies={studies} />
+      <StudiesList studies={studies} />
 
       {hasNextPage && (
         <button
