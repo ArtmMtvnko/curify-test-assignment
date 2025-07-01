@@ -1,9 +1,15 @@
 import { Applicant } from '@/shared/types/User';
 import Link from 'next/link';
 
+const hostUrl = process.env.HOST_URL;
+
+if (!hostUrl) {
+  throw new Error('HOST_URL environment variable is not defined');
+}
+
 async function getApplicants(): Promise<Applicant[]> {
   try {
-    const res = await fetch('http://localhost:3000/api/db', { cache: 'no-store' });
+    const res = await fetch(`${hostUrl}/api/db`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {
