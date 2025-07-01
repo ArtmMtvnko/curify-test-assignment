@@ -6,7 +6,8 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   await connectToDatabase();
 
-  return NextResponse.json(await User.find({}), { status: 200 });
+  const allApplicants = await User.find<Applicant>({});
+  return NextResponse.json(allApplicants, { status: 200 });
 }
 
 export async function POST(request: Request) {
