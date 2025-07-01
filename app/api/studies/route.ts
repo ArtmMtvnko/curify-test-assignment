@@ -10,26 +10,20 @@ export async function GET(request: Request) {
     throw new Error('STUDIES_API_URL environment variable is not defined');
   }
 
-  // Parse URL params from the request
+  const params: Record<string, string> = {};
+
   const { searchParams } = new URL(request.url);
 
-  // Convert searchParams to a plain object
-  const params: Record<string, string> = {};
-  searchParams.forEach((value, key) => {
-    params[key] = value;
-  });
+  const queryCond = searchParams.get('query.cond');
+
+  if (queryCond) {
+    params['query.cond'] = queryCond;
+  }
 
   params.fields =
     'protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.conditionsModule.conditions';
   params.countTotal = 'true';
-
-  // Add default pageSize if not provided
-  if (!params.pageSize) {
-    params.pageSize = '5';
-  }
-
-  console.log('Request params:', params);
-  console.log('Request URL:', studiesApiUrl);
+  params.pageSize = '10';
 
   const response = await axios.get<StudiesResponse>(studiesApiUrl, { params });
 

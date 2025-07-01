@@ -12,7 +12,6 @@ type FilterProps = {
 
 export default function Filter({ setStudies, setTotalCount }: FilterProps) {
   const [cond, setCond] = useState('');
-  const [pageSize, setPageSize] = useState(5);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,7 +20,6 @@ export default function Filter({ setStudies, setTotalCount }: FilterProps) {
       .get<LiteStudiesResponse>('api/studies/', {
         params: {
           'query.cond': cond,
-          pageSize,
         },
       })
       .then((response) => {
@@ -44,18 +42,6 @@ export default function Filter({ setStudies, setTotalCount }: FilterProps) {
           placeholder="Enter condition"
           className="ml-2 rounded border px-2 py-1"
         />
-      </label>
-      <label>
-        Page Size:
-        <select
-          value={pageSize}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-          className="ml-2 w-24 rounded border px-2 py-1"
-        >
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-        </select>
       </label>
       <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white">
         Apply Filter
